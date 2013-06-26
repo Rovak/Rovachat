@@ -1,0 +1,55 @@
+package rovachat.controllers
+
+import play.api.mvc.{WebSocket, Controller}
+import play.api.libs.json.{Json, JsObject, JsValue}
+import play.api.libs.iteratee.{Iteratee, Concurrent}
+import play.api.libs.concurrent.Akka
+import akka.actor.Props
+import rovachat.actors._
+import akka.pattern.ask
+import play.api.Play.current
+import akka.util.Timeout
+import scala.concurrent.duration.DurationInt
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import rovachat.actors.Connected
+import rovachat.actors.Join
+import rovachat.actors.Broadcast
+import rovachat.models.ChatChannel
+
+object Chat extends Controller {
+
+  val chatActor = Akka.system.actorOf(Props[Chat])
+  implicit val timeout = Timeout(5 seconds)
+
+  val (chatEnumerator, liveChannel) = Concurrent.broadcast[JsValue]
+
+  def live = WebSocket.async[JsValue] { request =>
+    chatActor ? Join() map {
+      case Connected(enumerator, member) =>
+        val iteratee = Iteratee.foreach[JsValue] {
+          case obj: JsObject =>
+            (obj \ "action").as[String] match {
+              case "broadcast" =>
+                chatActor ! Broadcast((obj \ "message").as[String])
+              case "channels" =>
+                chatActor ? GetChannels() map {
+                  case Channels(channels) =>
+                    member.channel.push(Json.obj(
+                      "action" -> "channels",
+                      "channels" -> channels.foldLeft(Json.arr()) {
+                        case (result, current) =>
+                          result :+ current.toJson
+                      })
+                    )
+                }
+              case "channel" =>
+                chatActor ? SendToChannel((obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
+            }
+        }.mapDone {
+          _ => println("disconnected")
+        }
+
+        (iteratee, enumerator)
+    }
+  }
+}

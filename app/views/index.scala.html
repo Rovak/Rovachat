@@ -1,0 +1,21 @@
+@(message: String)
+
+@main("Rovachat") {
+	<div ng-app="chat">
+
+	    <h1>Test</h1>
+	    <div id="sidebar" class="sidebar" ng-controller="ChannelCtrl">
+	    	<ul>
+				<li class="channel" ng-repeat="channel in channels">
+					<a href="#/channel/{{channel.title}}">{{channel.title}}</a>
+				</li>
+			</ul>
+	    </div>
+	    <div id="main" class="main" ng-view>
+
+	    </div>
+	    <div class="users">
+
+	    </div>
+	</div>
+}
