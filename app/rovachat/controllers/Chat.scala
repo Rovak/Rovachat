@@ -46,7 +46,9 @@ object Chat extends Controller {
                 chatActor ? SendToChannel((obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
             }
         }.mapDone {
-          _ => println("disconnected")
+          _ =>
+            chatActor ! Disconnect(member)
+            println("disconnected")
         }
 
         (iteratee, enumerator)

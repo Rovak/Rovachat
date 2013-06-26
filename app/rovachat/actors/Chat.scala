@@ -26,28 +26,27 @@ class Chat extends Actor {
       members ::= member
       println(s"Member count ${members.length}")
       chatChannels.foreach {
-        channel =>
-          chatChannels(channel._1) = channel._2 :+ member
+        channel => chatChannels(channel._1) = channel._2 :+ member
       }
       sender ! Connected(chatEnumerator, member)
 
     case Broadcast(msg) =>
       members.foreach {
-        member => {
-          member.channel.push(Message(msg))
-        }
+        _.channel.push(Message(msg))
       }
 
     case SendToChannel(msg, channel) =>
       if (chatChannels.contains(channel)) {
-        chatChannels(channel).foreach {
-          member => member.channel.push(ChannelMessage(msg, channel))
-
+        chatChannels(channel).foreach{
+          _.channel.push(ChannelMessage(msg, channel))
         }
       }
 
     case GetChannels() =>
       sender ! Channels(chatChannels.map(_._1).toList)
+
+    case Disconnect(user) =>
+      members = members.filter(_.uid != user.uid)
   }
 }
 
@@ -56,6 +55,7 @@ trait JsonMessage {
 }
 
 case class Join()
+case class Disconnect(user: SocketMember)
 case class Broadcast(msg: String)
 case class SendToChannel(msg: String, channel: ChatChannel)
 case class Connected(session: Enumerator[JsValue], member: SocketMember)
