@@ -1,5 +1,5 @@
 # Home page
-GET     /                           rovachat.controllers.Application.index
+GET     /                           rovachat.controllers.Chat.index
 GET     /chat/room                  rovachat.controllers.Chat.live
 
 # Map static resources from the /public folder to the /assets URL path

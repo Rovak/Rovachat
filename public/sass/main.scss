@@ -24,6 +24,11 @@ body {
 		border-bottom: 1px solid #FFF;
 		text-decoration: none;
 		display: block;
+
+		&.active { 
+			background-color: #FFF !important;
+			color: #000 !important;
+		}
 	}
 }
 
@@ -36,32 +41,35 @@ body {
 	background-color: #EEE;
 }
 
-.channel {
+.channel-input {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 6px;
+
+	input {
+		display: block;
+		width: 100%;
+		border: 0px;
+		margin: 0;
+		font-size: 16px;
+		padding: 3px;
+		font-family: Arial;
+	}
+}
+
+#channels .channel {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 25px;
+	top: 0;
+	background-color: #EEE;
 
 	h1 {
 		padding: 3px;
 		background-color: #000;
 		color: #FFF;
 	}
-
-
-	.channel-input {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		padding: 6px;
-
-		input {
-			display: block;
-			width: 100%;
-			border: 0px;
-			margin: 0;
-			font-size: 16px;
-			padding: 3px;
-			font-family: Arial;
-		}
-	}
-
-
 }

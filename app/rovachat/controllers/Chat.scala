@@ -1,6 +1,6 @@
 package rovachat.controllers
 
-import play.api.mvc.{WebSocket, Controller}
+import play.api.mvc.{Action, WebSocket, Controller}
 import play.api.libs.json.{Json, JsObject, JsValue}
 import play.api.libs.iteratee.{Iteratee, Concurrent}
 import play.api.libs.concurrent.Akka
@@ -22,6 +22,10 @@ object Chat extends Controller {
   implicit val timeout = Timeout(5 seconds)
 
   val (chatEnumerator, liveChannel) = Concurrent.broadcast[JsValue]
+
+  def index = Action {
+    Ok(views.html.index("Chat"))
+  }
 
   def live = WebSocket.async[JsValue] { request =>
     chatActor ? Join() map {

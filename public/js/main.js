@@ -17,29 +17,19 @@ websocket.onerror = function (ev) {
 
 };
 
-function ChatChannelCtrl($scope, $routeParams) {
-    console.log("Switched to channel: " + $routeParams.channelId);
-    $scope.channel = $routeParams.channelId;
+var currentChannel = 'Public';
+
+function ChatChannelCtrl($scope, $routeParams, $route) {
 
     $scope.onMessage = function() {
         websocket.send(JSON.stringify({
             'action' : 'channel',
-            'channel' : $scope.channel,
+            'channel' : currentChannel,
             'message' : $scope.message
         }));
         $scope.message = "";
-    }
+    };
 }
-
-
-angular.module('chat', []).
-    config(['$routeProvider', function($routeProvider) {
-      $routeProvider.when('/channel/:channelId', {
-            controller: ChatChannelCtrl,
-            templateUrl: 'assets/partials/channel.html'
-        }).otherwise({redirectTo: '/channel'});
-}]);
-
 
 function ChannelCtrl($scope) {
 
@@ -47,13 +37,17 @@ function ChannelCtrl($scope) {
         { title: 'Home' }
     ];
 
-    console.log("asfdas");
+    $scope.switchChannel = function(channel) {
+        currentChannel = channel;
+        $('#channels .channel').hide();
+        $('#room-' + channel).show();
+        $('li.channel a.active').removeClass('active');
+        $('li.channel a[channel="' + channel + '"]').addClass('active');
+    };
 
     websocket.onmessage = function(ev) {
 
         var data = JSON.parse(ev.data);
-
-        console.log("message", data);
 
         if (data.action) {
             switch(data.action) {
@@ -70,7 +64,15 @@ function ChannelCtrl($scope) {
                     });
                     break;
                 case 'channel':
-                    $('#channel-lines').append(data.channel + ": " + data.message + "<br>");
+                console.log("recieved message!");
+                    var divChannel = $('#room-' + data.channel);
+
+                    if (!divChannel.length) {
+                        $('#channels').append('<div class="channel" id="room-' + data.channel + '"></div>');
+                        divChannel = $('#room-' + data.channel);
+                    }
+
+                    divChannel.append(data.message + "<br>");
                     break;
             }
         }

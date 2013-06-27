@@ -1,21 +1,30 @@
 @(message: String)
 
 @main("Rovachat") {
-	<div ng-app="chat">
+	<div ng-app>
 
 	    <h1>Test</h1>
 	    <div id="sidebar" class="sidebar" ng-controller="ChannelCtrl">
 	    	<ul>
 				<li class="channel" ng-repeat="channel in channels">
-					<a href="#/channel/{{channel.title}}">{{channel.title}}</a>
+					<a href="javascript:;" channel="{{channel.title}}" ng-click="switchChannel(channel.title)">{{channel.title}}</a>
 				</li>
 			</ul>
 	    </div>
-	    <div id="main" class="main" ng-view>
+	    <div id="main" class="main" ng-controller="ChatChannelCtrl">
+	    	<div id="channels-navigation"></div>
+    		<div id="channels">
+
+
+    		</div>
+
+			<div class="channel-input">
+				<form ng-submit="onMessage()">
+					<input type="text" ng-model="message">
+				</form>
+			</div>
 
 	    </div>
-	    <div class="users">
-
-	    </div>
+	    <div class="users"></div>
 	</div>
 }

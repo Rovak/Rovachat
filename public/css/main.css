@@ -90,8 +90,13 @@ body {
   text-decoration: none;
   display: block;
 }
+/* line 28, ../sass/main.scss */
+.sidebar li.channel a.active {
+  background-color: #FFF !important;
+  color: #000 !important;
+}
 
-/* line 30, ../sass/main.scss */
+/* line 35, ../sass/main.scss */
 .main {
   position: absolute;
   left: 250px;
@@ -101,22 +106,16 @@ body {
   background-color: #EEE;
 }
 
-/* line 41, ../sass/main.scss */
-.channel h1 {
-  padding: 3px;
-  background-color: #000;
-  color: #FFF;
-}
-/* line 48, ../sass/main.scss */
-.channel .channel-input {
+/* line 44, ../sass/main.scss */
+.channel-input {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 6px;
 }
-/* line 55, ../sass/main.scss */
-.channel .channel-input input {
+/* line 51, ../sass/main.scss */
+.channel-input input {
   display: block;
   width: 100%;
   border: 0px;
@@ -124,4 +123,20 @@ body {
   font-size: 16px;
   padding: 3px;
   font-family: Arial;
+}
+
+/* line 62, ../sass/main.scss */
+#channels .channel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+  top: 0;
+  background-color: #EEE;
+}
+/* line 70, ../sass/main.scss */
+#channels .channel h1 {
+  padding: 3px;
+  background-color: #000;
+  color: #FFF;
 }
