@@ -38,7 +38,7 @@ class Chat extends Actor {
     case SendToChannel(msg, channel) =>
       if (chatChannels.contains(channel)) {
         chatChannels(channel).foreach{
-          _.channel.push(ChannelMessage(msg, channel))
+          _.channel.push(ChannelMessage(msg.replace(":y:", "<img src=\"http://www.emojiicons.com/1/185.gif\">"), channel))
         }
       }
 

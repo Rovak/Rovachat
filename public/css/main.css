@@ -63,40 +63,74 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 3, ../sass/main.scss */
+/* line 7, ../sass/main.scss */
 body {
-  background-color: #000;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  background: #000;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 13px;
 }
 
-/* line 9, ../sass/main.scss */
+/* line 14, ../sass/main.scss */
+textarea:focus, input:focus {
+  outline: 0;
+}
+
+/* line 19, ../sass/main.scss */
 .sidebar {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: 250px;
-  background-color: #CCC;
+  background: #CCC;
   font-weight: normal;
   font-size: 13px;
 }
-/* line 20, ../sass/main.scss */
+/* line 32, ../sass/main.scss */
 .sidebar li.channel a {
-  background-color: #30384a;
-  padding: 5px 2px 5px 15px;
-  color: #FFF;
-  border-bottom: 1px solid #FFF;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-top: 1px solid #ccc;
+  display: block;
+  padding: 8px 15px;
   text-decoration: none;
   display: block;
+  background: #DDD;
+  color: #222;
+  position: relative;
+  line-height: 22px;
 }
-/* line 28, ../sass/main.scss */
+/* line 45, ../sass/main.scss */
 .sidebar li.channel a.active {
-  background-color: #FFF !important;
-  color: #000 !important;
+  background: #168cbe !important;
+  color: #FFF !important;
+}
+/* line 50, ../sass/main.scss */
+.sidebar li.channel a .badge {
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 2px;
+  color: #FFF;
+  display: inline-block;
+  float: right;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 14px;
+  margin-top: 4px;
+  padding: 2px 4px;
+  vertical-align: baseline;
+  white-space: nowrap;
 }
 
-/* line 35, ../sass/main.scss */
+/* line 70, ../sass/main.scss */
 .main {
   position: absolute;
   left: 250px;
@@ -106,7 +140,7 @@ body {
   background-color: #EEE;
 }
 
-/* line 44, ../sass/main.scss */
+/* line 79, ../sass/main.scss */
 .channel-input {
   position: absolute;
   bottom: 0;
@@ -114,29 +148,45 @@ body {
   right: 0;
   padding: 6px;
 }
-/* line 51, ../sass/main.scss */
-.channel-input input {
+/* line 86, ../sass/main.scss */
+.channel-input .chat-input {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   display: block;
-  width: 100%;
-  border: 0px;
+  width: 99%;
+  border: 0;
   margin: 0;
   font-size: 16px;
   padding: 3px;
-  font-family: Arial;
+  background: #FFF;
+  border: 1px solid #C0CAD5;
+  line-height: 20px;
+  color: #333;
+  border-radius: 5px;
 }
 
-/* line 62, ../sass/main.scss */
+/* line 103, ../sass/main.scss */
 #channels .channel {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 25px;
+  bottom: 35px;
   top: 0;
   background-color: #EEE;
+  overflow-y: scroll;
 }
-/* line 70, ../sass/main.scss */
+/* line 112, ../sass/main.scss */
 #channels .channel h1 {
   padding: 3px;
   background-color: #000;
   color: #FFF;
+}
+
+/* line 119, ../sass/main.scss */
+.message {
+  padding: 4px 8px 4px 25px;
+  border-bottom: 1px solid #CCC;
+  color: #333;
+  font-size: 14px;
 }

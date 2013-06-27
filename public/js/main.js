@@ -64,7 +64,7 @@ function ChannelCtrl($scope) {
                     });
                     break;
                 case 'channel':
-                console.log("recieved message!");
+                    console.log("recieved message!");
                     var divChannel = $('#room-' + data.channel);
 
                     if (!divChannel.length) {
@@ -72,7 +72,8 @@ function ChannelCtrl($scope) {
                         divChannel = $('#room-' + data.channel);
                     }
 
-                    divChannel.append(data.message + "<br>");
+                    divChannel.append('<div class="message">' + data.message + "</div<");
+                    divChannel.scrollTop(divChannel[0].scrollHeight);
                     break;
             }
         }
