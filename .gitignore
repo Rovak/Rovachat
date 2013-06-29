@@ -18,3 +18,4 @@ bin
 .cache
 /data
 node_modules
+public/icons
