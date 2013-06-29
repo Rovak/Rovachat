@@ -5,18 +5,40 @@
 
 	    <h1>Test</h1>
 	    <div id="sidebar" class="sidebar" ng-controller="ChannelCtrl">
+	    	<div class="heading">
+	    		<a>
+	    			<span class="icon-reorder"></span>
+	    			Rooms
+	    		</a>
+	    	</div>
 	    	<ul>
 				<li class="channel" ng-repeat="channel in channels">
 					<a href="javascript:;"
 						channel="{{channel.title}}" 
 						ng-click="switchChannel(channel.title)">
 						{{channel.title}}
-						<span class="badge">10</span>
+						<!-- <span class="badge">10</span> -->
+					</a>
+				</li>
+			</ul>
+			<div class="heading">
+	    		<a>
+	    			<span class="icon-user"></span>
+	    			Users
+	    		</a>
+	    	</div>
+	    	<ul>
+				<li class="channel" ng-repeat="user in users">
+					<a href="javascript:;"
+						user="{{user.name}}" 
+						ng-click="switchUser(user.name)">
+						{{user.name}}
 					</a>
 				</li>
 			</ul>
 	    </div>
 	    <div id="main" class="main" ng-controller="ChatChannelCtrl">
+
 	    	<div id="channels-navigation"></div>
     		<div id="channels"></div>
 

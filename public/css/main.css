@@ -76,7 +76,7 @@ textarea:focus, input:focus {
 }
 
 /* line 19, ../sass/main.scss */
-.sidebar {
+#sidebar {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -88,13 +88,16 @@ textarea:focus, input:focus {
   background: #CCC;
   font-weight: normal;
   font-size: 13px;
+  border-right: 1px solid #777;
+  z-index: 50;
 }
-/* line 32, ../sass/main.scss */
-.sidebar li.channel a {
+/* line 36, ../sass/main.scss */
+#sidebar div.heading a {
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   border-top: 1px solid #ccc;
+  font-size: 16px;
   display: block;
   padding: 8px 15px;
   text-decoration: none;
@@ -104,13 +107,33 @@ textarea:focus, input:focus {
   position: relative;
   line-height: 22px;
 }
-/* line 45, ../sass/main.scss */
-.sidebar li.channel a.active {
+/* line 50, ../sass/main.scss */
+#sidebar div.heading a.active {
   background: #168cbe !important;
   color: #FFF !important;
 }
-/* line 50, ../sass/main.scss */
-.sidebar li.channel a .badge {
+/* line 56, ../sass/main.scss */
+#sidebar li.channel a {
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-top: 1px solid #ccc;
+  display: block;
+  padding: 8px 15px;
+  text-decoration: none;
+  display: block;
+  background: #EEE;
+  color: #222;
+  position: relative;
+  line-height: 22px;
+}
+/* line 69, ../sass/main.scss */
+#sidebar li.channel a.active {
+  background: #168cbe !important;
+  color: #FFF !important;
+}
+/* line 74, ../sass/main.scss */
+#sidebar li.channel a .badge {
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -130,7 +153,7 @@ textarea:focus, input:focus {
   white-space: nowrap;
 }
 
-/* line 70, ../sass/main.scss */
+/* line 94, ../sass/main.scss */
 .main {
   position: absolute;
   left: 250px;
@@ -140,15 +163,16 @@ textarea:focus, input:focus {
   background-color: #EEE;
 }
 
-/* line 79, ../sass/main.scss */
+/* line 103, ../sass/main.scss */
 .channel-input {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 6px;
+  background: #999;
 }
-/* line 86, ../sass/main.scss */
+/* line 112, ../sass/main.scss */
 .channel-input .chat-input {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -166,26 +190,26 @@ textarea:focus, input:focus {
   border-radius: 5px;
 }
 
-/* line 103, ../sass/main.scss */
+/* line 129, ../sass/main.scss */
 #channels .channel {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 35px;
+  bottom: 40px;
   top: 0;
   background-color: #EEE;
   overflow-y: scroll;
 }
-/* line 112, ../sass/main.scss */
+/* line 138, ../sass/main.scss */
 #channels .channel h1 {
   padding: 3px;
   background-color: #000;
   color: #FFF;
 }
 
-/* line 119, ../sass/main.scss */
+/* line 145, ../sass/main.scss */
 .message {
-  padding: 4px 8px 4px 25px;
+  padding: 6px 10px;
   border-bottom: 1px solid #CCC;
   color: #333;
   font-size: 14px;
