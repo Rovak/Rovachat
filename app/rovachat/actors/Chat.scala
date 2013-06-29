@@ -19,6 +19,8 @@ class Chat extends Actor {
   chatChannels += ChatChannel("Developers") -> List()
   chatChannels += ChatChannel("Consultants") -> List()
 
+  def channels = chatChannels.map(_._1).toList
+
   def SendToChannel(msg: String, channel: ChatChannel) = {
     if (chatChannels.contains(channel)) {
       val message = MessageFilter.filter(msg)
@@ -38,6 +40,18 @@ class Chat extends Actor {
 
     }
   }
+
+  def updateChannels() = {
+    members.foreach { member =>
+      member.channel.push(Json.obj(
+        "action" -> "channels",
+        "channels" -> channels.foldLeft(Json.arr()) {
+          case (result, current) => result :+ current.toJson
+        }))
+    }
+  }
+
+
 
   def receive = {
 
@@ -69,6 +83,11 @@ class Chat extends Actor {
       members = members.filter(_.uid != user.uid)
       updateUsers()
     }
+
+    case AddChannel(name: String) => {
+      chatChannels += ChatChannel(name) -> members
+      updateChannels()
+    }
   }
 }
 
@@ -91,6 +110,8 @@ case class Connected(session: Enumerator[JsValue], member: SocketMember)
 case class GetChannels()
 
 case class Channels(channels: List[ChatChannel])
+
+case class AddChannel(name: String)
 
 case class Message(msg: String) extends JsonMessage {
   def toJson = Json.obj(

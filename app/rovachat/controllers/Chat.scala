@@ -50,6 +50,9 @@ object Chat extends Controller {
                 }
               case "channel" =>
                 chatActor ? SendToChannel(member, (obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
+              case "addchannel" =>
+                chatActor ? AddChannel((obj \ "name").as[String])
+
             }
         }.mapDone {
           _ =>

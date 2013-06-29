@@ -89,7 +89,6 @@ function ChannelCtrl($scope) {
                     });
                     break;
                 case 'channel':
-                    console.log("recieved message!");
                     var divChannel = $('#room-' + data.channel);
 
                     if (!divChannel.length) {
