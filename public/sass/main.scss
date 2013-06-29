@@ -143,10 +143,28 @@ textarea, input {
 }
 
 .message {
-	padding: 6px 10px;
+	line-height: 30px;
 	border-bottom: 1px solid #CCC;
 	color: #333;
 	font-size: 14px;
+	background: #DDD;
+	position: relative;
+
+	span.user {
+		text-align: right;
+		width: 200px;
+		display: inline-block;
+		padding-right: 5px;
+		vertical-align: top;
+		position: absolute;
+		left: 0;
+	}
+	span.text {
+		margin-left: 205px;
+		padding-left: 5px;
+		background: #EEE;
+		display: block;
+	}
 }
 
 .ico {

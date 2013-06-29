@@ -17,6 +17,13 @@ websocket.onerror = function (ev) {
 
 };
 
+function addChannel(name) {
+    websocket.send(JSON.stringify({
+        action: 'addchannel',
+        name: name
+    }));
+}
+
 var currentChannel = 'Public';
 
 function ChatChannelCtrl($scope, $routeParams, $route) {
@@ -96,7 +103,15 @@ function ChannelCtrl($scope) {
                         divChannel = $('#room-' + data.channel);
                     }
 
-                    divChannel.append('<div class="message">' + data.message + "</div<");
+                    divChannel.append(
+                        '<div class="message">' +
+                            '<span class="user">' +
+                                data.user +
+                            '</span>' +
+                            '<span class="text">' +
+                                data.message +
+                            '</span>' +
+                        "</div>");
                     divChannel.scrollTop(divChannel[0].scrollHeight);
                     break;
             }

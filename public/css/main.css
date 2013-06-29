@@ -209,13 +209,32 @@ textarea:focus, input:focus {
 
 /* line 145, ../sass/main.scss */
 .message {
-  padding: 6px 10px;
+  line-height: 30px;
   border-bottom: 1px solid #CCC;
   color: #333;
   font-size: 14px;
+  background: #DDD;
+  position: relative;
+}
+/* line 153, ../sass/main.scss */
+.message span.user {
+  text-align: right;
+  width: 200px;
+  display: inline-block;
+  padding-right: 5px;
+  vertical-align: top;
+  position: absolute;
+  left: 0;
+}
+/* line 162, ../sass/main.scss */
+.message span.text {
+  margin-left: 205px;
+  padding-left: 5px;
+  background: #EEE;
+  display: block;
 }
 
-/* line 152, ../sass/main.scss */
+/* line 170, ../sass/main.scss */
 .ico {
   vertical-align: center;
   height: 16px;
