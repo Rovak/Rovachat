@@ -4,8 +4,8 @@ var websocket = new WebSocket("ws://localhost:9000/chat/room");
 
 websocket.onopen = function (ev) {
     console.log("websocket open");
-    websocket.send(JSON.stringify({action: 'broadcast', message: 'all'}));
-    websocket.send(JSON.stringify({action: 'channels'}));
+    websocket.send(JSON.stringify({ action: 'auth', username: 'Anonymous' }));
+    websocket.send(JSON.stringify({ action: 'channels' }));
 };
 
 websocket.onclose = function (ev) {
@@ -22,6 +22,18 @@ var currentChannel = 'Public';
 function ChatChannelCtrl($scope, $routeParams, $route) {
 
     $scope.onMessage = function() {
+        var msg = $scope.message;
+        if (!msg) return;
+
+        if (msg.substr(0,5) == '/nick') {
+            websocket.send(JSON.stringify({
+                'action' : 'auth',
+                'username' : msg.substr(6)
+            }));
+            $scope.message = "";
+            return;
+        }
+
         websocket.send(JSON.stringify({
             'action' : 'channel',
             'channel' : currentChannel,
@@ -33,9 +45,8 @@ function ChatChannelCtrl($scope, $routeParams, $route) {
 
 function ChannelCtrl($scope) {
 
-    $scope.channels = [
-        { title: 'Home' }
-    ];
+    $scope.channels = [];
+    $scope.users = [];
 
     $scope.switchChannel = function(channel) {
         currentChannel = channel;
@@ -43,6 +54,7 @@ function ChannelCtrl($scope) {
         $('#room-' + channel).show();
         $('li.channel a.active').removeClass('active');
         $('li.channel a[channel="' + channel + '"]').addClass('active');
+        $('.chat-input').focus();
     };
 
     websocket.onmessage = function(ev) {
@@ -51,6 +63,19 @@ function ChannelCtrl($scope) {
 
         if (data.action) {
             switch(data.action) {
+                case 'users': 
+                    var users = [];
+                    for (var i = 0; i < data.users.length; i++) {
+                        users.push({
+                            id: data.users[i].id,
+                            name: data.users[i].name
+                        });
+                    }
+
+                    $scope.$apply(function(){
+                        $scope.users = users;
+                    });
+                    break;
                 case 'channels':
                     var channels = [];
                     for (var i = 0; i < data.channels.length; i++) {

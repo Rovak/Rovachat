@@ -33,6 +33,8 @@ object Chat extends Controller {
         val iteratee = Iteratee.foreach[JsValue] {
           case obj: JsObject =>
             (obj \ "action").as[String] match {
+              case "auth" =>
+                chatActor ! Login(member, (obj \ "username").as[String])
               case "broadcast" =>
                 chatActor ! Broadcast((obj \ "message").as[String])
               case "channels" =>
@@ -47,7 +49,7 @@ object Chat extends Controller {
                     )
                 }
               case "channel" =>
-                chatActor ? SendToChannel((obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
+                chatActor ? SendToChannel(member, (obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
             }
         }.mapDone {
           _ =>
