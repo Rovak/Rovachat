@@ -109,7 +109,14 @@ case class Connected(session: Enumerator[JsValue], member: SocketMember)
 
 case class GetChannels()
 
-case class Channels(channels: List[ChatChannel])
+case class Channels(channels: List[ChatChannel]) extends JsonMessage {
+  def toJson = Json.obj(
+    "action" -> "channels",
+    "channels" -> channels.foldLeft(Json.arr()) {
+      case (result, current) =>
+        result :+ current.toJson
+    })
+}
 
 case class AddChannel(name: String)
 
