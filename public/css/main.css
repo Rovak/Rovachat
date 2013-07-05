@@ -76,23 +76,19 @@ textarea:focus, input:focus {
 }
 
 /* line 19, ../sass/main.scss */
-#sidebar {
+.sidebar {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 250px;
   background: #CCC;
   font-weight: normal;
   font-size: 13px;
   border-right: 1px solid #777;
   z-index: 50;
 }
-/* line 36, ../sass/main.scss */
-#sidebar div.heading a {
+/* line 32, ../sass/main.scss */
+.sidebar div.heading a {
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -107,13 +103,13 @@ textarea:focus, input:focus {
   position: relative;
   line-height: 22px;
 }
-/* line 50, ../sass/main.scss */
-#sidebar div.heading a.active {
+/* line 46, ../sass/main.scss */
+.sidebar div.heading a.active {
   background: #168cbe !important;
   color: #FFF !important;
 }
-/* line 56, ../sass/main.scss */
-#sidebar li.channel a {
+/* line 52, ../sass/main.scss */
+.sidebar li.channel a {
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -127,13 +123,13 @@ textarea:focus, input:focus {
   position: relative;
   line-height: 22px;
 }
-/* line 69, ../sass/main.scss */
-#sidebar li.channel a.active {
+/* line 65, ../sass/main.scss */
+.sidebar li.channel a.active {
   background: #168cbe !important;
   color: #FFF !important;
 }
-/* line 74, ../sass/main.scss */
-#sidebar li.channel a .badge {
+/* line 70, ../sass/main.scss */
+.sidebar li.channel a .badge {
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -153,17 +149,33 @@ textarea:focus, input:focus {
   white-space: nowrap;
 }
 
-/* line 94, ../sass/main.scss */
+/* line 90, ../sass/main.scss */
+#channels {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+}
+
+/* line 97, ../sass/main.scss */
+#userbar {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+}
+
+/* line 104, ../sass/main.scss */
 .main {
   position: absolute;
   left: 250px;
   top: 0;
   bottom: 0;
-  right: 0;
+  right: 251px;
   background-color: #EEE;
 }
 
-/* line 103, ../sass/main.scss */
+/* line 113, ../sass/main.scss */
 .channel-input {
   position: absolute;
   bottom: 0;
@@ -172,7 +184,7 @@ textarea:focus, input:focus {
   padding: 6px;
   background: #999;
 }
-/* line 112, ../sass/main.scss */
+/* line 122, ../sass/main.scss */
 .channel-input .chat-input {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -190,8 +202,8 @@ textarea:focus, input:focus {
   border-radius: 5px;
 }
 
-/* line 129, ../sass/main.scss */
-#channels .channel {
+/* line 139, ../sass/main.scss */
+#channels-containers .channel {
   position: absolute;
   left: 0;
   right: 0;
@@ -200,14 +212,14 @@ textarea:focus, input:focus {
   background-color: #EEE;
   overflow-y: scroll;
 }
-/* line 138, ../sass/main.scss */
-#channels .channel h1 {
+/* line 148, ../sass/main.scss */
+#channels-containers .channel h1 {
   padding: 3px;
   background-color: #000;
   color: #FFF;
 }
 
-/* line 145, ../sass/main.scss */
+/* line 155, ../sass/main.scss */
 .message {
   line-height: 30px;
   border-bottom: 1px solid #CCC;
@@ -216,7 +228,7 @@ textarea:focus, input:focus {
   background: #DDD;
   position: relative;
 }
-/* line 153, ../sass/main.scss */
+/* line 163, ../sass/main.scss */
 .message span.user {
   text-align: right;
   width: 200px;
@@ -226,7 +238,7 @@ textarea:focus, input:focus {
   position: absolute;
   left: 0;
 }
-/* line 162, ../sass/main.scss */
+/* line 172, ../sass/main.scss */
 .message span.text {
   margin-left: 205px;
   padding-left: 5px;
@@ -234,7 +246,7 @@ textarea:focus, input:focus {
   display: block;
 }
 
-/* line 170, ../sass/main.scss */
+/* line 180, ../sass/main.scss */
 .ico {
   vertical-align: center;
   height: 16px;
