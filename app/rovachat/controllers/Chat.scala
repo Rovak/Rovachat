@@ -22,7 +22,7 @@ object Chat extends Controller {
   val chatActor = Akka.system.actorOf(Props[Chat])
   implicit val timeout = Timeout(5 seconds)
 
-  def index = Action {
+  def index = Action { implicit request =>
     Ok(views.html.index("Chat"))
   }
 
@@ -40,11 +40,12 @@ object Chat extends Controller {
         (obj \ "action").as[String] match {
           case "auth" => chatActor ! Login(member, (obj \ "username").as[String])
           case "broadcast" => chatActor ! Broadcast((obj \ "message").as[String])
-          case "channels" => chatActor ? GetChannels() map {
+          case "channels" =>
+            chatActor ? GetChannels() map {
             case msg: JsonMessage => member.channel.push(msg.toJson)
           }
-          case "channel" => chatActor ? SendToChannel(member, (obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
-          case "addchannel" => chatActor ? AddChannel((obj \ "name").as[String])
+          case "channel" => chatActor ! SendToChannel(member, (obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
+          case "addchannel" => chatActor ! AddChannel((obj \ "name").as[String])
         }
       case _ => println("Invalid response")
     }.mapDone {

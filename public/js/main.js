@@ -1,6 +1,6 @@
 "use strict";
 
-var websocket = new WebSocket("ws://localhost:9000/chat/room");
+var websocket = new WebSocket(config.websocketUrl);
 
 websocket.onopen = function (ev) {
     console.log("websocket open");
