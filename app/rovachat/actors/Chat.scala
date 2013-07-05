@@ -21,6 +21,23 @@ class Chat extends Actor {
 
   def channels = chatChannels.map(_._1).toList
 
+  def addChannel(channel: ChatChannel) = {
+    if (!chatChannels.contains(channel)) {
+      chatChannels += channel -> List()
+      println("Adding " + channel)
+    }
+  }
+
+  def joinChannel(member: SocketMember, channel: ChatChannel): Unit = {
+    if (chatChannels.contains(channel)) {
+      chatChannels(channel) ::= member
+    } else {
+      addChannel(channel)
+      joinChannel(member, channel)
+    }
+    updateChannels(member)
+  }
+
   def SendToChannel(user: SocketMember, msg: String, channel: ChatChannel) = {
     if (chatChannels.contains(channel)) {
       val message = MessageFilter.filter(msg)
@@ -41,17 +58,24 @@ class Chat extends Actor {
     }
   }
 
-  def updateChannels() = {
-    members.foreach { member =>
-      member.channel.push(Json.obj(
-        "action" -> "channels",
-        "channels" -> channels.foldLeft(Json.arr()) {
-          case (result, current) => result :+ current.toJson
-        }))
-    }
+  def updateChannels(member: SocketMember) = {
+
+    val memberChannels = chatChannels.filter(_._2.contains(member)).map(_._1)
+
+    member.channel.push(Json.obj(
+      "action" -> "channels",
+      "channels" -> memberChannels.foldLeft(Json.arr()) {
+        case (result, current) => result :+ current.toJson
+      }))
   }
 
 
+  def leaveChannel(member: SocketMember, channel: ChatChannel) = {
+    if (chatChannels.contains(channel)) {
+      chatChannels(channel) = chatChannels(channel).filter(x => x != member)
+      updateChannels(member)
+    }
+  }
 
   def receive = {
 
@@ -75,8 +99,9 @@ class Chat extends Actor {
     case SendToChannel(user, msg, channel) =>
       SendToChannel(user, msg, channel)
 
-    case GetChannels() => {
+    case GetChannels(member) => {
       sender ! Channels(chatChannels.map(_._1).toList)
+      updateChannels(member)
     }
 
     case Disconnect(user) => {
@@ -86,7 +111,12 @@ class Chat extends Actor {
 
     case AddChannel(name: String) => {
       chatChannels += ChatChannel(name) -> members
-      updateChannels()
+    }
+    case JoinChannel(member, name) => {
+      joinChannel(member, ChatChannel(name))
+    }
+    case LeaveChannel(member, name) => {
+      leaveChannel(member, ChatChannel(name))
     }
   }
 }
@@ -107,7 +137,7 @@ case class SendToChannel(user: SocketMember, msg: String, channel: ChatChannel)
 
 case class Connected(session: Enumerator[JsValue], member: SocketMember)
 
-case class GetChannels()
+case class GetChannels(member: SocketMember)
 
 case class Channels(channels: List[ChatChannel]) extends JsonMessage {
   def toJson = Json.obj(
@@ -119,6 +149,10 @@ case class Channels(channels: List[ChatChannel]) extends JsonMessage {
 }
 
 case class AddChannel(name: String)
+
+case class JoinChannel(member: SocketMember, name: String)
+
+case class LeaveChannel(member: SocketMember, name: String)
 
 case class Message(msg: String) extends JsonMessage {
   def toJson = Json.obj(

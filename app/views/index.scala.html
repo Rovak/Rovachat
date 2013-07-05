@@ -1,10 +1,10 @@
 @(message: String)(implicit request: play.api.mvc.Request[AnyContent])
 
 @main("Rovachat") {
-	<div ng-app>
+	<div ng-controller="ChannelCtrl">
 
 	    <h1>Test</h1>
-	    <div id="sidebar" class="sidebar" ng-controller="ChannelCtrl">
+	    <div id="channels" class="sidebar" >
 	    	<div class="heading">
 	    		<a>
 	    			<span class="icon-reorder"></span>
@@ -21,7 +21,10 @@
 					</a>
 				</li>
 			</ul>
-			<div class="heading">
+	    </div>
+
+	    <div id="userbar" class="sidebar">
+	    	<div class="heading">
 	    		<a>
 	    			<span class="icon-user"></span>
 	    			Users
@@ -37,10 +40,11 @@
 				</li>
 			</ul>
 	    </div>
+
 	    <div id="main" class="main" ng-controller="ChatChannelCtrl">
 
 	    	<div id="channels-navigation"></div>
-    		<div id="channels"></div>
+    		<div id="channels-containers"></div>
 
 			<div class="channel-input">
 				<form ng-submit="onMessage()">

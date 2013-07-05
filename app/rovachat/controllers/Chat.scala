@@ -41,11 +41,13 @@ object Chat extends Controller {
           case "auth" => chatActor ! Login(member, (obj \ "username").as[String])
           case "broadcast" => chatActor ! Broadcast((obj \ "message").as[String])
           case "channels" =>
-            chatActor ? GetChannels() map {
+            chatActor ? GetChannels(member) map {
             case msg: JsonMessage => member.channel.push(msg.toJson)
           }
-          case "channel" => chatActor ! SendToChannel(member, (obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
-          case "addchannel" => chatActor ! AddChannel((obj \ "name").as[String])
+          case "channel_send" => chatActor ! SendToChannel(member, (obj \ "message").as[String], ChatChannel((obj \ "channel").as[String]))
+          case "channel_join" => chatActor ! JoinChannel(member, (obj \ "name").as[String])
+          case "channel_leave" => chatActor ! LeaveChannel(member, (obj \ "name").as[String])
+          case "channel_add" => chatActor ! AddChannel((obj \ "name").as[String])
         }
       case _ => println("Invalid response")
     }.mapDone {

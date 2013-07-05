@@ -12,6 +12,7 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")"></link>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/font-awesome.css")"></link>
         <script src="@routes.Assets.at("js/jquery-1.9.0.min.js")"></script>
+        <script src="@routes.Assets.at("js/underscore.js")"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
         <script type="text/javascript">
             var config = {
@@ -21,7 +22,7 @@
         </script>
         <script src="@routes.Assets.at("js/main.js")"></script>
     </head>
-    <body>
+    <body ng-app="rovachat">
         @content
     </body>
 </html>

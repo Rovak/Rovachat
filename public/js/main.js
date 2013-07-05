@@ -1,76 +1,131 @@
-"use strict";
-
-var websocket = new WebSocket(config.websocketUrl);
-
-websocket.onopen = function (ev) {
-    console.log("websocket open");
-    websocket.send(JSON.stringify({ action: 'auth', username: 'Anonymous' }));
-    websocket.send(JSON.stringify({ action: 'channels' }));
-};
-
-websocket.onclose = function (ev) {
-
-};
+var rovachatModule = angular.module('rovachat', []);
 
 
-websocket.onerror = function (ev) {
+rovachatModule.service('live', function() {
 
-};
+    var websocket = new WebSocket(config.websocketUrl);
 
-function addChannel(name) {
-    websocket.send(JSON.stringify({
-        action: 'addchannel',
-        name: name
-    }));
-}
+    websocket.onopen = function (ev) {
+        console.log("websocket open");
+        websocket.send(JSON.stringify({ action: 'auth', username: 'Anonymous' }));
+        websocket.send(JSON.stringify({ action: 'channels' }));
+    };
+
+    websocket.onclose = function (ev) {
+
+    };
+
+
+    websocket.onerror = function (ev) {
+
+    };
+
+    return {
+        socket: websocket,
+        sendAction: function(action, obj) {
+            _.extend(obj, { action: action });
+            websocket.send(JSON.stringify(obj));
+        }
+    };
+});
+
+
+rovachatModule.service('screen', function() {
+    return {
+        channelsContainer: function() {
+            return $('#channels-containers .channel');
+        },
+        getChannelMenuItemEl: function(channel) {
+            return $('li.channel a[channel="' + channel + '"]');
+        },
+        getChannelEl: function(channel) {
+            return $('#room-' + channel);
+        },
+        getInput: function() {
+            return $('.chat-input');
+        }
+    };
+});
+
+
 
 var currentChannel = 'Public';
 
-function ChatChannelCtrl($scope, $routeParams, $route) {
+function ChatChannelCtrl($scope, $routeParams, $route, live) {
+
+    function joinChannel(name) {
+        live.sendAction('joinchannel', {
+            name: name
+        });
+    }
+
+    function IsCommand(message) {
+        return message[0] == '/';
+    }
+
+    function HandleCommand(message) {
+        var commands = message.substr(1).split(' ');
+        var data = commands.slice(1, commands.length).join(' ');
+
+        switch(commands[0].toLowerCase()) {
+            case 'nick':
+                live.sendAction('auth', {
+                    username: data
+                });
+                break;
+            case 'join':
+                live.sendAction('channel_join', {
+                    name: data
+                });
+                break;
+            case 'leave':
+                live.sendAction('channel_leave', {
+                    name: data
+                });
+                break;
+        }
+    }
 
     $scope.onMessage = function() {
+
         var msg = $scope.message;
+
         if (!msg) return;
 
-        if (msg.substr(0,5) == '/nick') {
-            websocket.send(JSON.stringify({
-                'action' : 'auth',
-                'username' : msg.substr(6)
-            }));
-            $scope.message = "";
-            return;
+        if (IsCommand(msg)) {
+            HandleCommand(msg);
+        } else {
+            live.sendAction('channel_send', {
+                'channel' : currentChannel,
+                'message' : $scope.message
+            });
         }
 
-        websocket.send(JSON.stringify({
-            'action' : 'channel',
-            'channel' : currentChannel,
-            'message' : $scope.message
-        }));
         $scope.message = "";
     };
 }
 
-function ChannelCtrl($scope) {
+function ChannelCtrl($scope, live, screen) {
 
     $scope.channels = [];
     $scope.users = [];
 
     $scope.switchChannel = function(channel) {
         currentChannel = channel;
-        $('#channels .channel').hide();
-        $('#room-' + channel).show();
+        $('#channels-containers .channel').hide();
+        screen.getChannelEl(channel).show();
         $('li.channel a.active').removeClass('active');
-        $('li.channel a[channel="' + channel + '"]').addClass('active');
-        $('.chat-input').focus();
+        screen.getChannelMenuItemEl(channel).addClass('active');
+        screen.getInput().focus();
     };
 
-    websocket.onmessage = function(ev) {
+    live.socket.onmessage = function(ev) {
 
         var data = JSON.parse(ev.data);
 
         if (data.action) {
             switch(data.action) {
-                case 'users': 
+                case 'users':
                     var users = [];
                     for (var i = 0; i < data.users.length; i++) {
                         users.push({
@@ -96,10 +151,11 @@ function ChannelCtrl($scope) {
                     });
                     break;
                 case 'channel':
+                    console.log("reieved message", data);
                     var divChannel = $('#room-' + data.channel);
 
                     if (!divChannel.length) {
-                        $('#channels').append('<div class="channel" id="room-' + data.channel + '"></div>');
+                        $('#channels-containers').append('<div class="channel" id="room-' + data.channel + '"></div>');
                         divChannel = $('#room-' + data.channel);
                     }
 
@@ -118,4 +174,3 @@ function ChannelCtrl($scope) {
         }
     };
 }
-
