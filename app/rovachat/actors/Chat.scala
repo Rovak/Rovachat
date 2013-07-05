@@ -39,6 +39,7 @@ class Chat extends Actor {
   }
 
   def SendToChannel(user: SocketMember, msg: String, channel: ChatChannel) = {
+    println("asfsa")
     if (chatChannels.contains(channel)) {
       val message = MessageFilter.filter(msg)
       chatChannels(channel).foreach {
@@ -104,8 +105,11 @@ class Chat extends Actor {
       updateChannels(member)
     }
 
-    case Disconnect(user) => {
-      members = members.filter(_.uid != user.uid)
+    case Disconnect(member) => {
+      chatChannels.foreach { case (channel, users) =>
+        chatChannels(channel) = users.filter(_ != member)
+      }
+      members = members.filter(_.uid != member.uid)
       updateUsers()
     }
 

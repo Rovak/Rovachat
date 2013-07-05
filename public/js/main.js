@@ -15,7 +15,6 @@ rovachatModule.service('live', function() {
 
     };
 
-
     websocket.onerror = function (ev) {
 
     };
@@ -32,8 +31,8 @@ rovachatModule.service('live', function() {
 
 rovachatModule.service('screen', function() {
     return {
-        channelsContainer: function() {
-            return $('#channels-containers .channel');
+        getChannelsContainer: function() {
+            return $('#channels-containers');
         },
         getChannelMenuItemEl: function(channel) {
             return $('li.channel a[channel="' + channel + '"]');
@@ -41,13 +40,17 @@ rovachatModule.service('screen', function() {
         getChannelEl: function(channel) {
             return $('#room-' + channel);
         },
+        getAllChannelsEl: function() {
+            return $('#channels-containers .channel');
+        },
         getInput: function() {
             return $('.chat-input');
+        },
+        getChannelSelectedMenuItemEl: function() {
+            return $('li.channel a.active');
         }
     };
 });
-
-
 
 var currentChannel = 'Public';
 
@@ -65,7 +68,7 @@ function ChatChannelCtrl($scope, $routeParams, $route, live) {
 
     function HandleCommand(message) {
         var commands = message.substr(1).split(' ');
-        var data = commands.slice(1, commands.length).join(' ');
+        var data = commands.slice(1).join(' ');
 
         switch(commands[0].toLowerCase()) {
             case 'nick':
@@ -112,9 +115,9 @@ function ChannelCtrl($scope, live, screen) {
 
     $scope.switchChannel = function(channel) {
         currentChannel = channel;
-        $('#channels-containers .channel').hide();
+        screen.getAllChannelsEl().hide();
         screen.getChannelEl(channel).show();
-        $('li.channel a.active').removeClass('active');
+        screen.getChannelSelectedMenuItemEl().removeClass('active');
         screen.getChannelMenuItemEl(channel).addClass('active');
         screen.getInput().focus();
     };
@@ -123,54 +126,52 @@ function ChannelCtrl($scope, live, screen) {
 
         var data = JSON.parse(ev.data);
 
-        if (data.action) {
-            switch(data.action) {
-                case 'users':
-                    var users = [];
-                    for (var i = 0; i < data.users.length; i++) {
-                        users.push({
-                            id: data.users[i].id,
-                            name: data.users[i].name
-                        });
-                    }
-
-                    $scope.$apply(function(){
-                        $scope.users = users;
+        switch(data.action) {
+            case 'users':
+                var users = [];
+                for (var i = 0; i < data.users.length; i++) {
+                    users.push({
+                        id: data.users[i].id,
+                        name: data.users[i].name
                     });
-                    break;
-                case 'channels':
-                    var channels = [];
-                    for (var i = 0; i < data.channels.length; i++) {
-                        channels.push({
-                            title: data.channels[i].name
-                        });
-                    }
+                }
 
-                    $scope.$apply(function(){
-                        $scope.channels = channels;
+                $scope.$apply(function(){
+                    $scope.users = users;
+                });
+                break;
+            case 'channels':
+                var channels = [];
+                for (var i = 0; i < data.channels.length; i++) {
+                    channels.push({
+                        title: data.channels[i].name
                     });
-                    break;
-                case 'channel':
-                    console.log("reieved message", data);
-                    var divChannel = $('#room-' + data.channel);
+                }
 
-                    if (!divChannel.length) {
-                        $('#channels-containers').append('<div class="channel" id="room-' + data.channel + '"></div>');
-                        divChannel = $('#room-' + data.channel);
-                    }
+                $scope.$apply(function(){
+                    $scope.channels = channels;
+                });
+                break;
+            case 'channel':
+                var divChannel = screen.getChannelEl(data.channel);
 
-                    divChannel.append(
-                        '<div class="message">' +
-                            '<span class="user">' +
-                                data.user +
-                            '</span>' +
-                            '<span class="text">' +
-                                data.message +
-                            '</span>' +
-                        "</div>");
-                    divChannel.scrollTop(divChannel[0].scrollHeight);
-                    break;
-            }
+                if (!divChannel.length) {
+                    screen.getChannelsContainer().append('<div class="channel" id="room-' + data.channel + '"></div>');
+                    divChannel = screen.getChannelEl(data.channel);
+                }
+
+                divChannel.append(
+                    '<div class="message">' +
+                        '<span class="user">' +
+                            data.user +
+                        '</span>' +
+                        '<span class="text">' +
+                            data.message +
+                        '</span>' +
+                    "</div>");
+
+                divChannel.scrollTop(divChannel.scrollHeight);
+                break;
         }
     };
 }
