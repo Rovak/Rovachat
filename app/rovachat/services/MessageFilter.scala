@@ -9,7 +9,7 @@ object MessageFilter {
 
   val publicFolder = Play.application.path.getPath + "/public/icons"
 
-  var filters = List[String => String](injectIcons)
+  var filters = List[String => String](injectIcons, injectImages)
 
   def filter(msg: String) = {
     filters.foldLeft(msg) {
@@ -25,6 +25,13 @@ object MessageFilter {
         if (new File(publicFolder + "/" + fileName).exists()) {
            result.replace(ico, s"<img class='ico' src='/assets/icons/$fileName'>")
         } else result
+    }
+  }
+
+  def injectImages(msg: String) = {
+    val imgUrlPattern = new Regex("(https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif))")
+    imgUrlPattern.findAllIn(msg).foldLeft(msg) {
+      case (result, imageUrl) => result.replace(imageUrl, s"<img src='$imageUrl'>")
     }
   }
 

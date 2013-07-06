@@ -10,6 +10,7 @@ import rovachat.services.MessageFilter
 class Chat extends Actor {
 
   implicit def MessageToJson(message: JsonMessage) = message.toJson
+  implicit def StringToChannel(channel: String) = ChatChannel(channel)
 
   var members = List[SocketMember]()
   var chatChannels = scala.collection.mutable.Map[ChatChannel, List[SocketMember]]()
@@ -39,7 +40,6 @@ class Chat extends Actor {
   }
 
   def SendToChannel(user: SocketMember, msg: String, channel: ChatChannel) = {
-    println("asfsa")
     if (chatChannels.contains(channel)) {
       val message = MessageFilter.filter(msg)
       chatChannels(channel).foreach {
@@ -157,6 +157,8 @@ case class AddChannel(name: String)
 case class JoinChannel(member: SocketMember, name: String)
 
 case class LeaveChannel(member: SocketMember, name: String)
+
+case class SendImage(member: SocketMember, url: String, channel: String)
 
 case class Message(msg: String) extends JsonMessage {
   def toJson = Json.obj(
