@@ -1,6 +1,5 @@
 var rovachatModule = angular.module('rovachat', []);
 
-
 rovachatModule.service('live', function() {
 
     var websocket = new WebSocket(config.websocketUrl);
@@ -28,7 +27,6 @@ rovachatModule.service('live', function() {
     };
 });
 
-
 rovachatModule.service('screen', function() {
     return {
         getChannelsContainer: function() {
@@ -52,9 +50,26 @@ rovachatModule.service('screen', function() {
     };
 });
 
-var currentChannel = 'Public';
+rovachatModule.service('channelMgr', function(screen) {
 
-function ChatChannelCtrl($scope, $routeParams, $route, live) {
+    var currentChannel;
+
+    return {
+        getActiveChannel: function() {
+            return currentChannel;
+        },
+        setActiveChannel: function(channel) {
+            currentChannel = channel;
+            screen.getAllChannelsEl().hide();
+            screen.getChannelEl(channel).show();
+            screen.getChannelSelectedMenuItemEl().removeClass('active');
+            screen.getChannelMenuItemEl(channel).addClass('active');
+            screen.getInput().focus();
+        }
+    };
+});
+
+function ChatChannelCtrl($scope, $routeParams, $route, live, channelMgr) {
 
     function joinChannel(name) {
         live.sendAction('joinchannel', {
@@ -99,7 +114,7 @@ function ChatChannelCtrl($scope, $routeParams, $route, live) {
             HandleCommand(msg);
         } else {
             live.sendAction('channel_send', {
-                'channel' : currentChannel,
+                'channel' : channelMgr.getActiveChannel(),
                 'message' : $scope.message
             });
         }
@@ -108,18 +123,15 @@ function ChatChannelCtrl($scope, $routeParams, $route, live) {
     };
 }
 
-function ChannelCtrl($scope, live, screen) {
+function ChannelCtrl($scope, live, screen, channelMgr) {
+
+    channelMgr.setActiveChannel('Public');
 
     $scope.channels = [];
     $scope.users = [];
 
     $scope.switchChannel = function(channel) {
-        currentChannel = channel;
-        screen.getAllChannelsEl().hide();
-        screen.getChannelEl(channel).show();
-        screen.getChannelSelectedMenuItemEl().removeClass('active');
-        screen.getChannelMenuItemEl(channel).addClass('active');
-        screen.getInput().focus();
+        channelMgr.setActiveChannel(channel);
     };
 
     live.socket.onmessage = function(ev) {
@@ -127,6 +139,7 @@ function ChannelCtrl($scope, live, screen) {
         var data = JSON.parse(ev.data);
 
         switch(data.action) {
+
             case 'users':
                 var users = [];
                 for (var i = 0; i < data.users.length; i++) {
@@ -140,6 +153,7 @@ function ChannelCtrl($scope, live, screen) {
                     $scope.users = users;
                 });
                 break;
+
             case 'channels':
                 var channels = [];
                 for (var i = 0; i < data.channels.length; i++) {
@@ -152,6 +166,7 @@ function ChannelCtrl($scope, live, screen) {
                     $scope.channels = channels;
                 });
                 break;
+
             case 'channel':
                 var divChannel = screen.getChannelEl(data.channel);
 
