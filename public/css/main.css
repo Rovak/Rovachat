@@ -225,32 +225,34 @@ textarea:focus, input:focus {
 
 /* line 160, ../../assets/sass/main.scss */
 .message {
-  line-height: 30px;
   border-bottom: 1px solid #CCC;
   color: #333;
   font-size: 14px;
   background: #DDD;
   position: relative;
 }
-/* line 168, ../../assets/sass/main.scss */
+/* line 167, ../../assets/sass/main.scss */
 .message span.user {
   text-align: right;
   width: 200px;
   display: inline-block;
-  padding-right: 5px;
   vertical-align: top;
   position: absolute;
   left: 0;
+  padding: 5px;
 }
-/* line 177, ../../assets/sass/main.scss */
+/* line 176, ../../assets/sass/main.scss */
 .message span.text {
-  margin-left: 205px;
+  padding: 5px;
+  margin-left: 210px;
   padding-left: 5px;
   background: #EEE;
   display: block;
+  word-wrap: break-word;
+  line-height: 21px;
 }
 
-/* line 185, ../../assets/sass/main.scss */
+/* line 187, ../../assets/sass/main.scss */
 .ico {
   vertical-align: center;
   height: 16px;

@@ -158,7 +158,6 @@ textarea, input {
 }
 
 .message {
-	line-height: 30px;
 	border-bottom: 1px solid #CCC;
 	color: #333;
 	font-size: 14px;
@@ -169,16 +168,19 @@ textarea, input {
 		text-align: right;
 		width: 200px;
 		display: inline-block;
-		padding-right: 5px;
 		vertical-align: top;
 		position: absolute;
 		left: 0;
+		padding: 5px;
 	}
 	span.text {
-		margin-left: 205px;
+		padding: 5px;
+		margin-left: 210px;
 		padding-left: 5px;
 		background: #EEE;
 		display: block;
+		word-wrap:break-word;
+		line-height: 21px;
 	}
 }
 
