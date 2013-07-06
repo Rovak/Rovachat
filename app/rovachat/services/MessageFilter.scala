@@ -4,12 +4,16 @@ import scala.util.matching.Regex
 import play.api.Play
 import play.api.Play.current
 import java.io.File
+import org.apache.commons.lang3.StringEscapeUtils
 
 object MessageFilter {
 
   val publicFolder = Play.application.path.getPath + "/public/icons"
 
-  var filters = List[String => String](injectIcons, injectImages)
+  var filters = List[String => String](
+    filterHtml,
+    injectIcons,
+    injectImages)
 
   def filter(msg: String) = {
     filters.foldLeft(msg) {
@@ -33,6 +37,10 @@ object MessageFilter {
     imgUrlPattern.findAllIn(msg).foldLeft(msg) {
       case (result, imageUrl) => result.replace(imageUrl, s"<img src='$imageUrl'>")
     }
+  }
+
+  def filterHtml(msg: String) = {
+    StringEscapeUtils.escapeHtml4(msg)
   }
 
 
